@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+<title>Contact Support – ShopNova</title>
+<link rel="stylesheet" href="css/style.css?v=1.1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+.contact-container{display:grid;grid-template-columns:1fr 1.5fr;gap:48px;max-width:1100px;margin:0 auto;padding:40px 20px}
+.contact-info-card{background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:24px;padding:40px;color:#fff;display:flex;flex-direction:column;gap:32px;box-shadow:var(--glow)}
+.contact-method{display:flex;align-items:center;gap:20px}
+.contact-method .icon{width:50px;height:50px;background:rgba(255,255,255,.2);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem}
+.contact-method h4{font-size:.9rem;opacity:.8;margin-bottom:4px;text-transform:uppercase;letter-spacing:1px}
+.contact-method p{font-size:1.1rem;font-weight:600}
+.contact-form-card{background:var(--card);border:1px solid var(--border);border-radius:24px;padding:40px}
+@media(max-width:992px){.contact-container{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-left" style="display:flex;align-items:center;gap:12px">
+    <button class="nav-toggle" id="sidebar-open"><i class="fa-solid fa-bars"></i></button>
+    <a href="index.html" class="nav-brand"><i class="fa-solid fa-bag-shopping"></i> <span>ShopNova</span></a>
+  </div>
+  <div class="nav-center">
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="products.html">Products</a>
+    </div>
+  </div>
+  <div class="nav-right">
+    <a href="cart.html" class="nav-btn cart-wrap" id="cart-link">
+      <i class="fa-solid fa-cart-shopping"></i> <span>Cart</span> <span class="cart-badge" id="cart-badge">0</span>
+    </a>
+    <div class="nav-member" style="display:none;align-items:center;gap:10px">
+      <a href="orders.html" class="nav-btn btn-outline"><i class="fa-solid fa-box"></i> <span>Orders</span></a>
+      <button class="nav-btn btn-ghost" onclick="logout()" style="padding:8px"><i class="fa-solid fa-right-from-bracket"></i></button>
+    </div>
+    <div class="nav-guest" style="display:flex;gap:8px">
+      <a href="login.html" class="nav-btn btn-outline">Login</a>
+    </div>
+  </div>
+</nav>
+
+<!-- SIDEBAR -->
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <a href="index.html" class="nav-brand"><i class="fa-solid fa-bag-shopping"></i> <span>ShopNova</span></a>
+    <button class="nav-toggle" id="sidebar-close" style="color:var(--text3)"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <div class="sidebar-links">
+    <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+    <a href="products.html"><i class="fa-solid fa-bag-shopping"></i> Products</a>
+    <a href="cart.html"><i class="fa-solid fa-cart-shopping"></i> My Cart</a>
+    <div class="nav-member" style="display:none;flex-direction:column;gap:10px">
+      <a href="orders.html"><i class="fa-solid fa-box"></i> My Orders</a>
+      <a href="my-products.html"><i class="fa-solid fa-store"></i> My Products</a>
+      <a href="add-product.html"><i class="fa-solid fa-plus"></i> Add Product</a>
+    </div>
+    <div class="nav-guest" style="display:flex;flex-direction:column;gap:10px">
+      <a href="login.html"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
+      <a href="register.html"><i class="fa-solid fa-user-plus"></i> Sign Up</a>
+    </div>
+    <a href="contact.html" class="active"><i class="fa-solid fa-headset"></i> Contact Support</a>
+    <button class="nav-member btn btn-ghost" onclick="logout()" style="display:none;justify-content:flex-start;padding:14px 16px;width:100%;gap:12px">
+      <i class="fa-solid fa-right-from-bracket" style="color:var(--error)"></i> Logout
+    </button>
+  </div>
+</aside>
+
+<script>
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('sidebar-overlay');
+const openBtn = document.getElementById('sidebar-open');
+const closeBtn = document.getElementById('sidebar-close');
+
+const toggleSidebar = (state) => {
+  sidebar.classList.toggle('active', state);
+  overlay.classList.toggle('active', state);
+  document.body.style.overflow = state ? 'hidden' : '';
+};
+
+openBtn.onclick = () => toggleSidebar(true);
+closeBtn.onclick = () => toggleSidebar(false);
+overlay.onclick = () => toggleSidebar(false);
+</script>
+
+<div class="page section">
+  <div style="text-align:center;margin-bottom:60px">
+    <h1 style="font-size:2.5rem;font-weight:900;margin-bottom:12px">Get In Touch</h1>
+    <p style="color:var(--text3);font-size:1.1rem">Have questions? We're here to help you 24/7.</p>
+  </div>
+
+  <div class="contact-container">
+    <div class="contact-info-card">
+      <h2 style="font-size:1.8rem;font-weight:800">Contact Information</h2>
+      <p style="opacity:.9;line-height:1.6">Fill out the form and our team will get back to you within 24 hours.</p>
+      
+      <div class="contact-method">
+        <div class="icon"><i class="fa-solid fa-phone"></i></div>
+        <div>
+          <h4>Phone Number</h4>
+          <p>03709684425</p>
+        </div>
+      </div>
+
+      <div class="contact-method">
+        <div class="icon"><i class="fa-solid fa-envelope"></i></div>
+        <div>
+          <h4>Email Address</h4>
+          <p>csmuhammadkhan@gmail.com</p>
+        </div>
+      </div>
+
+      <div class="contact-method">
+        <div class="icon"><i class="fa-solid fa-location-dot"></i></div>
+        <div>
+          <h4>Main Office</h4>
+          <p>123 Tech Avenue, NY 10001</p>
+        </div>
+      </div>
+
+      <div style="margin-top:auto;display:flex;gap:20px;font-size:1.5rem">
+        <a href="#" style="color:#fff"><i class="fa-brands fa-facebook"></i></a>
+        <a href="#" style="color:#fff"><i class="fa-brands fa-twitter"></i></a>
+        <a href="#" style="color:#fff"><i class="fa-brands fa-instagram"></i></a>
+      </div>
+    </div>
+
+    <div class="contact-form-card">
+      <form id="contact-form">
+        <!-- Hidden but still used for logic -->
+        <div style="display:none">
+          <input type="text" id="contact-name" value="Guest">
+          <input type="email" id="contact-email" value="guest@example.com">
+          <select id="contact-subject">
+            <option value="General Inquiry" selected>General Inquiry</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Your Message</label>
+          <textarea id="contact-message" rows="8" placeholder="How can we help you?" required style="min-height:200px"></textarea>
+        </div>
+        <button type="submit" class="btn btn-accent" style="width:100%;justify-content:center;padding:18px;font-size:1.1rem">
+          <i class="fa-solid fa-paper-plane"></i> Send Message
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-grid container">
+    <div class="footer-about">
+      <a href="index.html" class="nav-brand"><i class="fa-solid fa-bag-shopping"></i> ShopNova</a>
+      <p style="margin-top:16px;color:var(--text2);font-size:.9rem;line-height:1.6">Elevate your lifestyle with our curated collection of premium products.</p>
+      <div style="display:flex;gap:15px;margin-top:20px">
+        <a href="#" class="social-link"><i class="fa-brands fa-facebook"></i></a>
+        <a href="#" class="social-link"><i class="fa-brands fa-instagram"></i></a>
+        <a href="#" class="social-link"><i class="fa-brands fa-twitter"></i></a>
+      </div>
+    </div>
+    
+    <div class="footer-links">
+      <h4><i class="fa-solid fa-store" style="color:var(--accent);margin-right:8px"></i> Shop</h4>
+      <a href="products.html"><i class="fa-solid fa-chevron-right" style="font-size:.7rem;margin-right:8px"></i> All Products</a>
+      <a href="products.html?cat=Electronics"><i class="fa-solid fa-chevron-right" style="font-size:.7rem;margin-right:8px"></i> Electronics</a>
+      <a href="products.html?cat=Fashion"><i class="fa-solid fa-chevron-right" style="font-size:.7rem;margin-right:8px"></i> Fashion</a>
+      <a href="products.html?cat=Beauty"><i class="fa-solid fa-chevron-right" style="font-size:.7rem;margin-right:8px"></i> Beauty & Wellness</a>
+    </div>
+
+    <div class="footer-links">
+      <h4><i class="fa-solid fa-user-circle" style="color:var(--accent);margin-right:8px"></i> Account</h4>
+      <a href="login.html"><i class="fa-solid fa-key" style="font-size:.7rem;margin-right:8px"></i> Login</a>
+      <a href="register.html"><i class="fa-solid fa-user-plus" style="font-size:.7rem;margin-right:8px"></i> Sign Up</a>
+      <a href="orders.html"><i class="fa-solid fa-box" style="font-size:.7rem;margin-right:8px"></i> My Orders</a>
+      <a href="cart.html"><i class="fa-solid fa-cart-shopping" style="font-size:.7rem;margin-right:8px"></i> View Cart</a>
+    </div>
+
+    <div class="footer-links">
+      <h4><i class="fa-solid fa-headset" style="color:var(--accent);margin-right:8px"></i> Quick Support</h4>
+      <a href="contact.html" class="btn btn-accent" style="display:inline-flex;width:auto;padding:12px 24px;gap:10px;margin-bottom:15px;border-radius:12px">
+        <i class="fa-solid fa-paper-plane"></i> Contact Us
+      </a>
+      <div style="display:flex;flex-direction:column;gap:12px;margin-top:10px">
+        <p style="font-size:.85rem;color:var(--text3);display:flex;align-items:center;gap:10px"><i class="fa-solid fa-phone" style="color:var(--accent)"></i> 03709684425</p>
+        <p style="font-size:.85rem;color:var(--text3);display:flex;align-items:center;gap:10px"><i class="fa-solid fa-envelope" style="color:var(--accent)"></i> help@shopnova.com</p>
+        <p style="font-size:.85rem;color:var(--text3);display:flex;align-items:center;gap:10px"><i class="fa-solid fa-location-dot" style="color:var(--accent)"></i> 24/7 Global Support</p>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom container">
+    <p>&copy; 2024 ShopNova. All rights reserved.</p>
+    <p style="display:flex;align-items:center;gap:5px">Handcrafted with <i class="fa-solid fa-heart" style="color:var(--red)"></i> for the world</p>
+  </div>
+</footer>
+
+<script src="js/api.js"></script>
+<script>
+// Auto-fill if logged in
+if (Auth.isLoggedIn()) {
+  const user = Auth.getUser();
+  document.getElementById('contact-name').value = user.name || '';
+  document.getElementById('contact-email').value = user.email || '';
+}
+
+document.getElementById('contact-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const btn = this.querySelector('button');
+  const name = document.getElementById('contact-name').value;
+  const email = document.getElementById('contact-email').value;
+  const subject = document.getElementById('contact-subject').value;
+  const message = document.getElementById('contact-message').value;
+
+  btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
+  
+  try {
+    const data = await apiFetch('/contact', {
+      method: 'POST',
+      body: JSON.stringify({ name, email, subject, message })
+    });
+    showToast(data.message || 'Message sent successfully! 🚀', 'success');
+    this.reset();
+  } catch(err) {
+    showToast(err.message || 'Failed to send email.', 'error');
+  } finally {
+    btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Send Message';
+  }
+});
+</script>
+</body>
+</html>

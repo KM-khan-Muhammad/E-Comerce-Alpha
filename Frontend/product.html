@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Product Details – ShopNova</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+.product-detail{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
+.product-img-wrap{border-radius:var(--radius);overflow:hidden;border:1px solid var(--border)}
+.product-img-wrap img{width:100%;display:block;max-height:500px;object-fit:cover}
+.product-info h1{font-size:1.6rem;font-weight:800;margin-bottom:12px;line-height:1.3}
+.price-block{display:flex;align-items:center;gap:12px;margin:16px 0}
+.big-price{font-size:2rem;font-weight:800;color:var(--text)}
+.big-old{font-size:1.1rem;color:var(--text3);text-decoration:line-through}
+.big-badge{background:var(--red);color:#fff;padding:4px 10px;border-radius:6px;font-size:.85rem;font-weight:700}
+.qty-row{display:flex;align-items:center;gap:12px;margin:20px 0}
+.qty-btn{width:38px;height:38px;border-radius:8px;border:1px solid var(--border);background:var(--bg3);color:var(--text);font-size:1.1rem;cursor:pointer;transition:all .2s}
+.qty-btn:hover{border-color:var(--accent);color:var(--accent)}
+.qty-val{width:48px;text-align:center;font-weight:700;font-size:1rem}
+.detail-actions{display:flex;gap:12px;flex-wrap:wrap}
+.stock-info{display:inline-flex;align-items:center;gap:6px;font-size:.85rem;padding:4px 12px;border-radius:99px}
+.in-stock{background:rgba(16,185,129,.12);color:var(--green)}
+.out-stock{background:rgba(239,68,68,.12);color:var(--red)}
+.product-tabs{margin-top:32px}
+.tab-btns{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:24px}
+.tab-btn{padding:12px 20px;background:transparent;border:none;border-bottom:2px solid transparent;color:var(--text2);font-size:.9rem;font-weight:500;cursor:pointer;transition:all .2s}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+.tab-content{display:none}
+.tab-content.active{display:block}
+.spec-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.spec-item{background:var(--bg3);border-radius:8px;padding:12px 16px}
+.spec-item label{font-size:.75rem;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:4px}
+.spec-item span{font-weight:600;font-size:.9rem}
+@media(max-width:768px){.product-detail{grid-template-columns:1fr}.spec-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-left" style="display:flex;align-items:center;gap:12px">
+    <button class="nav-toggle" id="sidebar-open"><i class="fa-solid fa-bars"></i></button>
+    <a href="index.html" class="nav-brand"><i class="fa-solid fa-bag-shopping"></i> <span>ShopNova</span></a>
+  </div>
+  <div class="nav-center">
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="products.html" class="active">Products</a>
+    </div>
+  </div>
+  <div class="nav-right">
+    <a href="cart.html" class="nav-btn cart-wrap" id="cart-link">
+      <i class="fa-solid fa-cart-shopping"></i> <span>Cart</span> <span class="cart-badge" id="cart-badge">0</span>
+    </a>
+    <div class="nav-member" style="display:none;align-items:center;gap:10px">
+      <a href="orders.html" class="nav-btn btn-outline"><i class="fa-solid fa-box"></i> <span>Orders</span></a>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;line-height:1">
+        <span style="color:var(--text3);font-size:.7rem;text-transform:uppercase;letter-spacing:.5px">Account</span>
+        <strong id="nav-username" style="color:var(--text);font-size:.85rem"></strong>
+      </div>
+      <button class="nav-btn btn-ghost" onclick="logout()" style="padding:8px"><i class="fa-solid fa-right-from-bracket"></i></button>
+    </div>
+    <div class="nav-guest" style="display:flex;gap:8px">
+      <a href="login.html" class="nav-btn btn-outline">Login</a>
+      <a href="register.html" class="nav-btn btn-primary">Sign Up</a>
+    </div>
+  </div>
+</nav>
+
+<!-- SIDEBAR -->
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <a href="index.html" class="nav-brand"><i class="fa-solid fa-bag-shopping"></i> <span>ShopNova</span></a>
+    <button class="nav-toggle" id="sidebar-close" style="color:var(--text3)"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <div class="sidebar-links">
+    <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+    <a href="products.html" class="active"><i class="fa-solid fa-bag-shopping"></i> Products</a>
+    <a href="cart.html"><i class="fa-solid fa-cart-shopping"></i> My Cart</a>
+    <div class="nav-member" style="display:none;flex-direction:column;gap:10px">
+      <a href="orders.html"><i class="fa-solid fa-box"></i> My Orders</a>
+      <a href="my-products.html"><i class="fa-solid fa-store"></i> My Products</a>
+      <a href="add-product.html"><i class="fa-solid fa-plus"></i> Add Product</a>
+    </div>
+    <div class="nav-guest" style="display:flex;flex-direction:column;gap:10px">
+      <a href="login.html"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
+      <a href="register.html"><i class="fa-solid fa-user-plus"></i> Sign Up</a>
+    </div>
+    <a href="contact.html"><i class="fa-solid fa-headset"></i> Contact Support</a>
+    <button class="nav-member btn btn-ghost" onclick="logout()" style="display:none;justify-content:flex-start;padding:14px 16px;width:100%;gap:12px">
+      <i class="fa-solid fa-right-from-bracket" style="color:var(--error)"></i> Logout
+    </button>
+  </div>
+</aside>
+
+<script>
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('sidebar-overlay');
+const openBtn = document.getElementById('sidebar-open');
+const closeBtn = document.getElementById('sidebar-close');
+const toggleSidebar = (state) => {
+  sidebar.classList.toggle('active', state);
+  overlay.classList.toggle('active', state);
+  document.body.style.overflow = state ? 'hidden' : '';
+};
+if(openBtn) openBtn.onclick = () => toggleSidebar(true);
+if(closeBtn) closeBtn.onclick = () => toggleSidebar(false);
+if(overlay) overlay.onclick = () => toggleSidebar(false);
+</script>
+
+<div class="page section">
+  <a href="products.html" style="color:var(--text3);text-decoration:none;font-size:.85rem;display:inline-flex;align-items:center;gap:6px;margin-bottom:24px"><i class="fa-solid fa-arrow-left"></i> Back to Products</a>
+  <div id="product-detail"><div class="spinner"></div></div>
+
+  <!-- Related -->
+  <div style="margin-top:60px">
+    <h2 class="section-title" style="margin-bottom:24px">You May Also <span>Like</span></h2>
+    <div class="product-grid" id="related-grid"></div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-grid container">
+    <div class="footer-about">
+      <a href="index.html" class="nav-brand"><i class="fa-solid fa-bag-shopping"></i> ShopNova</a>
+      <p style="margin-top:16px;color:var(--text2);font-size:.9rem;line-height:1.6">Elevate your lifestyle with our curated collection of premium products.</p>
+      <div style="display:flex;gap:15px;margin-top:20px">
+        <a href="#" class="social-link"><i class="fa-brands fa-facebook"></i></a>
+        <a href="#" class="social-link"><i class="fa-brands fa-instagram"></i></a>
+        <a href="#" class="social-link"><i class="fa-brands fa-twitter"></i></a>
+      </div>
+    </div>
+    
+    <div class="footer-links">
+      <h4><i class="fa-solid fa-store" style="color:var(--accent);margin-right:8px"></i> Shop</h4>
+      <a href="products.html"><i class="fa-solid fa-chevron-right" style="font-size:.7rem;margin-right:8px"></i> All Products</a>
+      <a href="products.html?cat=Electronics"><i class="fa-solid fa-chevron-right" style="font-size:.7rem;margin-right:8px"></i> Electronics</a>
+      <a href="products.html?cat=Fashion"><i class="fa-solid fa-chevron-right" style="font-size:.7rem;margin-right:8px"></i> Fashion</a>
+    </div>
+
+    <div class="footer-links">
+      <h4><i class="fa-solid fa-user-circle" style="color:var(--accent);margin-right:8px"></i> Account</h4>
+      <a href="login.html"><i class="fa-solid fa-key" style="font-size:.7rem;margin-right:8px"></i> Login</a>
+      <a href="register.html"><i class="fa-solid fa-user-plus" style="font-size:.7rem;margin-right:8px"></i> Sign Up</a>
+      <a href="orders.html"><i class="fa-solid fa-box" style="font-size:.7rem;margin-right:8px"></i> My Orders</a>
+    </div>
+
+    <div class="footer-links">
+      <h4><i class="fa-solid fa-headset" style="color:var(--accent);margin-right:8px"></i> Quick Support</h4>
+      <a href="contact.html" class="btn btn-accent" style="display:inline-flex;width:auto;padding:12px 24px;gap:10px;margin-bottom:15px;border-radius:12px">
+        <i class="fa-solid fa-paper-plane"></i> Contact Us
+      </a>
+      <div style="display:flex;flex-direction:column;gap:12px;margin-top:10px">
+        <p style="font-size:.85rem;color:var(--text3);display:flex;align-items:center;gap:10px"><i class="fa-solid fa-phone" style="color:var(--accent)"></i> 03709684425</p>
+        <p style="font-size:.85rem;color:var(--text3);display:flex;align-items:center;gap:10px"><i class="fa-solid fa-envelope" style="color:var(--accent)"></i> help@shopnova.com</p>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom container">
+    <p>&copy; 2024 ShopNova. All rights reserved.</p>
+    <p style="display:flex;align-items:center;gap:5px">Handcrafted with <i class="fa-solid fa-heart" style="color:var(--red)"></i> for the world</p>
+  </div>
+</footer>
+
+<script src="js/api.js"></script>
+<script>
+const id = new URLSearchParams(location.search).get('id');
+let qty = 1;
+
+async function loadProduct() {
+  if (!id) { location.href = 'products.html'; return; }
+  try {
+    const { product: p, related } = await apiFetch(`/products/${id}`);
+    document.title = `${p.name} – ShopNova`;
+    const disc = p.original_price ? Math.round((1-p.price/p.original_price)*100) : 0;
+    document.getElementById('product-detail').innerHTML = `
+      <div class="product-detail fade-in">
+        <div class="product-img-wrap">
+          <img src="${p.image_url}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/600x500/141c2e/6c63ff?text=Product'">
+        </div>
+        <div class="product-info">
+          <div style="margin-bottom:8px">
+            <span class="status-badge status-confirmed" style="margin-right:8px"><i class="fa-solid ${p.category_icon}"></i> ${p.category_name||''}</span>
+            ${p.stock > 0 ? `<span class="stock-info in-stock"><i class="fa-solid fa-circle-check"></i> In Stock (${p.stock})</span>` : '<span class="stock-info out-stock"><i class="fa-solid fa-circle-xmark"></i> Out of Stock</span>'}
+          </div>
+          <h1>${p.name}</h1>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+            <span class="stars" style="font-size:1rem">${'★'.repeat(Math.floor(p.rating))}${'☆'.repeat(5-Math.floor(p.rating))}</span>
+            <span style="color:var(--accent2);font-weight:600">${p.rating}</span>
+            <span style="color:var(--text3);font-size:.85rem">(${(p.reviews_count||0).toLocaleString()} reviews)</span>
+          </div>
+          <div class="price-block">
+            <span class="big-price">${fmt.price(p.price)}</span>
+            ${p.original_price ? `<span class="big-old">${fmt.price(p.original_price)}</span>` : ''}
+            ${disc>0 ? `<span class="big-badge">-${disc}%</span>` : ''}
+          </div>
+          <div class="qty-row">
+            <span style="color:var(--text2);font-size:.875rem">Quantity:</span>
+            <button class="qty-btn" onclick="changeQty(-1)">−</button>
+            <span class="qty-val" id="qty-display">1</span>
+            <button class="qty-btn" onclick="changeQty(1)">+</button>
+            <span style="color:var(--text3);font-size:.8rem">Max: ${p.stock}</span>
+          </div>
+
+          <!-- SELLER INFO -->
+          <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:16px;margin:24px 0;display:flex;align-items:center;gap:15px">
+            <div style="width:40px;height:40px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:1.2rem">
+              ${(p.seller_name || 'S')[0].toUpperCase()}
+            </div>
+            <div style="flex:1">
+              <div style="color:var(--text3);font-size:.7rem;text-transform:uppercase;letter-spacing:.5px;font-weight:700">Listed By</div>
+              <div style="color:var(--text);font-weight:700;font-size:.95rem">${p.seller_name || 'System Store'}</div>
+              <div style="color:var(--text2);font-size:.8rem">${p.seller_email || 'support@shopnova.com'}</div>
+            </div>
+          </div>
+
+          <div class="detail-actions">
+            ${(Auth.getUser() && p.user_id === Auth.getUser().id) ? `
+              <div style="background:rgba(108,99,255,0.1);padding:14px;border-radius:var(--radius2);border:1px solid var(--accent);color:var(--text2);font-size:0.9rem;text-align:center;width:100%;line-height:1.4">
+                <i class="fa-solid fa-circle-info" style="color:var(--accent);margin-bottom:4px;display:block;font-size:1.1rem"></i>
+                This is your product listing.<br><span style="font-size:0.8rem;color:var(--text3)">You cannot purchase your own items.</span>
+              </div>
+            ` : `
+              <button class="btn btn-accent btn-lg" onclick="addToCart(${p.id},'${p.name.replace(/'/g,"\\'")}',${p.stock})" ${p.stock<1?'disabled':''}>
+                <i class="fa-solid fa-cart-plus"></i> Add to Cart
+              </button>
+              <a href="cart.html" class="btn btn-ghost btn-lg">View Cart</a>
+            `}
+          </div>
+          <div style="margin-top:20px;padding:16px;background:var(--bg3);border-radius:8px;font-size:.85rem;color:var(--text2);line-height:1.8">
+            <i class="fa-solid fa-truck-fast"></i> Free shipping on orders over $100<br>
+            <i class="fa-solid fa-rotate-left"></i> 30-day free returns<br>
+            <i class="fa-solid fa-shield-halved"></i> 2-year warranty included
+          </div>
+        </div>
+      </div>
+      <div class="product-tabs">
+        <div class="tab-btns">
+          <button class="tab-btn active" onclick="switchTab('desc',this)">Description</button>
+          <button class="tab-btn" onclick="switchTab('specs',this)">Specifications</button>
+        </div>
+        <div class="tab-content active" id="tab-desc">
+          <p style="color:var(--text2);line-height:1.8;white-space:pre-wrap;font-size:1rem;">${(p.description || 'No description available.').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</p>
+        </div>
+        <div class="tab-content" id="tab-specs">
+          <div class="spec-grid">
+            <div class="spec-item"><label>Category</label><span>${p.category_name}</span></div>
+            <div class="spec-item"><label>Rating</label><span>${p.rating} / 5.0</span></div>
+            <div class="spec-item"><label>Reviews</label><span>${(p.reviews_count||0).toLocaleString()}</span></div>
+            <div class="spec-item"><label>Stock</label><span>${p.stock} units</span></div>
+            <div class="spec-item"><label>SKU</label><span>SN-${String(p.id).padStart(5,'0')}</span></div>
+            <div class="spec-item"><label>Added</label><span>${fmt.date(p.created_at)}</span></div>
+          </div>
+        </div>
+      </div>`;
+
+    // Related
+    if (related?.length) {
+      document.getElementById('related-grid').innerHTML = related.map(r => `
+        <div class="product-card fade-in" onclick="location.href='product.html?id=${r.id}'" style="cursor:pointer">
+          <img class="product-card__img" src="${r.image_url}" alt="${r.name}" onerror="this.src='https://via.placeholder.com/400x220/141c2e/6c63ff?text=Product'">
+          <div class="product-card__body">
+            <div class="product-card__name">${r.name}</div>
+            <div class="product-card__price"><span class="price-now">${fmt.price(r.price)}</span></div>
+          </div>
+        </div>`).join('');
+    }
+  } catch(e) { document.getElementById('product-detail').innerHTML = '<p style="color:var(--red)">Failed to load product.</p>'; }
+}
+
+function changeQty(delta) {
+  qty = Math.max(1, qty + delta);
+  document.getElementById('qty-display').textContent = qty;
+}
+
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(`tab-${name}`).classList.add('active');
+}
+
+async function addToCart(pid, name, stock) {
+  if (!Auth.isLoggedIn()) { showToast('Please login first', 'info'); setTimeout(() => location.href='login.html', 1000); return; }
+  if (stock < 1) { showToast('Out of stock', 'error'); return; }
+  try {
+    await apiFetch('/cart/add', { method:'POST', body: JSON.stringify({ product_id: pid, quantity: qty }) });
+    showToast(`${name} × ${qty} added to cart! 🛒`);
+    refreshCartBadge();
+  } catch(e) { showToast(e.message, 'error'); }
+}
+
+loadProduct();
+</script>
+</body>
+</html>

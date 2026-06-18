@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+<title>ShopNova – All Products</title>
+<link rel="stylesheet" href="css/style.css?v=1.1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-left" style="display:flex;align-items:center;gap:12px">
+    <button class="nav-toggle" id="sidebar-open"><i class="fa-solid fa-bars"></i></button>
+    <a href="index.html" class="nav-brand"><i class="fa-solid fa-bag-shopping"></i> <span>ShopNova</span></a>
+  </div>
+  <div class="nav-center">
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="products.html" class="active">Products</a>
+    </div>
+  </div>
+  <div class="nav-right">
+    <a href="cart.html" class="nav-btn cart-wrap" id="cart-link">
+      <i class="fa-solid fa-cart-shopping"></i> <span>Cart</span> <span class="cart-badge" id="cart-badge">0</span>
+    </a>
+    <div class="nav-guest" style="display:flex;gap:8px">
+      <a href="login.html" class="nav-btn btn-outline">Login</a>
+      <a href="register.html" class="nav-btn btn-primary">Sign Up</a>
+    </div>
+    <div class="nav-member" style="display:none;align-items:center;gap:10px">
+      <a href="orders.html" class="nav-btn btn-outline"><i class="fa-solid fa-box"></i> <span>Orders</span></a>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;line-height:1">
+        <span style="color:var(--text3);font-size:.7rem;text-transform:uppercase;letter-spacing:.5px">Account</span>
+        <strong id="nav-username" style="color:var(--text);font-size:.85rem"></strong>
+      </div>
+      <button class="nav-btn btn-ghost" onclick="logout()" style="padding:8px"><i class="fa-solid fa-right-from-bracket"></i></button>
+    </div>
+  </div>
+</nav>
+
+<!-- SIDEBAR -->
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <a href="index.html" class="nav-brand"><i class="fa-solid fa-bag-shopping"></i> <span>ShopNova</span></a>
+    <button class="nav-toggle" id="sidebar-close" style="color:var(--text3)"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <div class="sidebar-links">
+    <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+    <a href="products.html" class="active"><i class="fa-solid fa-bag-shopping"></i> Products</a>
+    <a href="cart.html"><i class="fa-solid fa-cart-shopping"></i> My Cart</a>
+    <div class="nav-member" style="display:none;flex-direction:column;gap:10px">
+      <a href="orders.html"><i class="fa-solid fa-box"></i> My Orders</a>
+      <a href="my-products.html"><i class="fa-solid fa-store"></i> My Products</a>
+      <a href="add-product.html"><i class="fa-solid fa-plus"></i> Add Product</a>
+    </div>
+    <div class="nav-guest" style="display:flex;flex-direction:column;gap:10px">
+      <a href="login.html"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
+      <a href="register.html"><i class="fa-solid fa-user-plus"></i> Sign Up</a>
+    </div>
+    <a href="contact.html"><i class="fa-solid fa-headset"></i> Contact Support</a>
+    <button class="nav-member btn btn-ghost" onclick="logout()" style="display:none;justify-content:flex-start;padding:14px 16px;width:100%;gap:12px">
+      <i class="fa-solid fa-right-from-bracket" style="color:var(--error)"></i> Logout
+    </button>
+  </div>
+</aside>
+
+<script>
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('sidebar-overlay');
+const openBtn = document.getElementById('sidebar-open');
+const closeBtn = document.getElementById('sidebar-close');
+
+const toggleSidebar = (state) => {
+  sidebar.classList.toggle('active', state);
+  overlay.classList.toggle('active', state);
+  document.body.style.overflow = state ? 'hidden' : '';
+};
+
+openBtn.onclick = () => toggleSidebar(true);
+closeBtn.onclick = () => toggleSidebar(false);
+overlay.onclick = () => toggleSidebar(false);
+</script>
+
+<div class="page section">
+  <h1 style="font-size:1.8rem;font-weight:800;margin-bottom:24px">All Products</h1>
+
+  <!-- Filter Bar -->
+  <div class="filter-bar">
+    <div class="search-wrap">
+      <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+      <input type="text" id="search-input" placeholder="Search products...">
+    </div>
+    <div class="filter-group">
+      <select class="filter-select" id="sort-select">
+        <option value="">Sort: Featured</option>
+        <option value="price_asc">Price: Low → High</option>
+        <option value="price_desc">Price: High → Low</option>
+        <option value="rating">Top Rated</option>
+        <option value="newest">Newest</option>
+      </select>
+      <select class="filter-select" id="price-select">
+        <option value="">All Prices</option>
+        <option value="0-50">Under $50</option>
+        <option value="50-150">$50 – $150</option>
+        <option value="150-500">$150 – $500</option>
+        <option value="500-9999">Over $500</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Category Pills -->
+  <div class="cat-pills" id="cat-pills">
+    <button class="cat-pill active" data-cat="all">All</button>
+  </div>
+
+  <!-- Results count -->
+  <p style="color:var(--text3);font-size:.85rem;margin-bottom:16px" id="results-count"></p>
+
+  <!-- Grid -->
+  <div class="product-grid" id="product-grid"><div class="spinner"></div></div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-grid container">
+    <div class="footer-about">
+      <a href="index.html" class="nav-brand"><i class="fa-solid fa-bag-shopping"></i> ShopNova</a>
+      <p style="margin-top:16px;color:var(--text2);font-size:.9rem;line-height:1.6">Elevate your lifestyle with our curated collection of premium products.</p>
+      <div style="display:flex;gap:15px;margin-top:20px">
+        <a href="#" class="social-link"><i class="fa-brands fa-facebook"></i></a>
+        <a href="#" class="social-link"><i class="fa-brands fa-instagram"></i></a>
+        <a href="#" class="social-link"><i class="fa-brands fa-twitter"></i></a>
+      </div>
+    </div>
+    
+    <div class="footer-links">
+      <h4><i class="fa-solid fa-store" style="color:var(--accent);margin-right:8px"></i> Shop</h4>
+      <a href="products.html"><i class="fa-solid fa-chevron-right" style="font-size:.7rem;margin-right:8px"></i> All Products</a>
+      <a href="products.html?cat=Electronics"><i class="fa-solid fa-chevron-right" style="font-size:.7rem;margin-right:8px"></i> Electronics</a>
+      <a href="products.html?cat=Fashion"><i class="fa-solid fa-chevron-right" style="font-size:.7rem;margin-right:8px"></i> Fashion</a>
+      <a href="products.html?cat=Beauty"><i class="fa-solid fa-chevron-right" style="font-size:.7rem;margin-right:8px"></i> Beauty & Wellness</a>
+    </div>
+
+    <div class="footer-links">
+      <h4><i class="fa-solid fa-user-circle" style="color:var(--accent);margin-right:8px"></i> Account</h4>
+      <a href="login.html"><i class="fa-solid fa-key" style="font-size:.7rem;margin-right:8px"></i> Login</a>
+      <a href="register.html"><i class="fa-solid fa-user-plus" style="font-size:.7rem;margin-right:8px"></i> Sign Up</a>
+      <a href="orders.html"><i class="fa-solid fa-box" style="font-size:.7rem;margin-right:8px"></i> My Orders</a>
+      <a href="cart.html"><i class="fa-solid fa-cart-shopping" style="font-size:.7rem;margin-right:8px"></i> View Cart</a>
+    </div>
+
+    <div class="footer-links">
+      <h4><i class="fa-solid fa-headset" style="color:var(--accent);margin-right:8px"></i> Quick Support</h4>
+      <a href="contact.html" class="btn btn-accent" style="display:inline-flex;width:auto;padding:12px 24px;gap:10px;margin-bottom:15px;border-radius:12px">
+        <i class="fa-solid fa-paper-plane"></i> Contact Us
+      </a>
+      <div style="display:flex;flex-direction:column;gap:12px;margin-top:10px">
+        <p style="font-size:.85rem;color:var(--text3);display:flex;align-items:center;gap:10px"><i class="fa-solid fa-phone" style="color:var(--accent)"></i> 03709684425</p>
+        <p style="font-size:.85rem;color:var(--text3);display:flex;align-items:center;gap:10px"><i class="fa-solid fa-envelope" style="color:var(--accent)"></i> help@shopnova.com</p>
+        <p style="font-size:.85rem;color:var(--text3);display:flex;align-items:center;gap:10px"><i class="fa-solid fa-location-dot" style="color:var(--accent)"></i> 24/7 Global Support</p>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom container">
+    <p>&copy; 2024 ShopNova. All rights reserved.</p>
+    <p style="display:flex;align-items:center;gap:5px">Handcrafted with <i class="fa-solid fa-heart" style="color:var(--red)"></i> for the world</p>
+  </div>
+</footer>
+
+<script src="js/api.js"></script>
+<script>
+let activeCat = 'all';
+let searchTimer;
+
+async function loadCats() {
+  try {
+    const { categories } = await apiFetch('/products/categories');
+    const pills = document.getElementById('cat-pills');
+    categories.forEach(c => {
+      const btn = document.createElement('button');
+      btn.className = 'cat-pill'; btn.dataset.cat = c.name;
+      btn.innerHTML = `<i class="fa-solid ${c.icon}"></i> ${c.name}`;
+      btn.onclick = () => { activeCat = c.name; setActivePill(btn); loadProducts(); };
+      pills.appendChild(btn);
+    });
+    document.querySelector('.cat-pill[data-cat="all"]').onclick = () => { activeCat = 'all'; setActivePill(document.querySelector('[data-cat="all"]')); loadProducts(); };
+  } catch(e){}
+  // Check URL params
+  const p = new URLSearchParams(location.search);
+  if (p.get('cat')) {
+    activeCat = p.get('cat');
+    const pill = document.querySelector(`[data-cat="${activeCat}"]`);
+    if (pill) setActivePill(pill);
+  }
+  loadProducts();
+}
+
+function setActivePill(el) {
+  document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+}
+
+async function loadProducts() {
+  const grid = document.getElementById('product-grid');
+  grid.innerHTML = '<div class="spinner"></div>';
+  const search = document.getElementById('search-input').value;
+  const sort = document.getElementById('sort-select').value;
+  const priceRange = document.getElementById('price-select').value;
+  const params = new URLSearchParams({ limit: 50 });
+  if (activeCat !== 'all') params.set('category', activeCat);
+  if (search) params.set('search', search);
+  if (sort) params.set('sort', sort);
+  if (priceRange) { const [min, max] = priceRange.split('-'); params.set('minPrice', min); params.set('maxPrice', max); }
+  try {
+    const { products } = await apiFetch(`/products?${params}`);
+    document.getElementById('results-count').textContent = `${products.length} product${products.length !== 1 ? 's' : ''} found`;
+    if (!products.length) { grid.innerHTML = '<div class="empty-state"><div class="icon">🔍</div><h3>No products found</h3><p>Try adjusting your filters</p></div>'; return; }
+    grid.innerHTML = products.map(p => renderCard(p)).join('');
+    grid.querySelectorAll('.add-to-cart-btn').forEach(btn => btn.addEventListener('click', e => { e.stopPropagation(); addToCart(btn.dataset.id, btn.dataset.name); }));
+    grid.querySelectorAll('.product-card').forEach(card => card.addEventListener('click', () => window.location.href = `product.html?id=${card.dataset.id}`));
+  } catch(e) { grid.innerHTML = '<p style="color:var(--red);text-align:center">Failed to load products</p>'; }
+}
+
+function renderCard(p) {
+  const user = Auth.getUser();
+  const isOwner = user && p.user_id === user.id;
+  const disc = p.original_price ? Math.round((1-p.price/p.original_price)*100) : 0;
+  return `<div class="product-card fade-in" data-id="${p.id}">
+    ${disc>0?`<div class="product-card__badge">-${disc}%</div>`:''}
+    <img class="product-card__img" src="${p.image_url}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/400x220/141c2e/6c63ff?text=Product'">
+    <div class="product-card__body">
+      <div class="product-card__cat"><i class="fa-solid ${p.category_icon}"></i> ${p.category_name||''}</div>
+      <div class="product-card__name">${p.name}</div>
+      <div class="product-card__rating">
+        <span class="stars">${'★'.repeat(Math.floor(p.rating))}${'☆'.repeat(5-Math.floor(p.rating))}</span>
+        <span class="rating-count">(${(p.reviews_count||0).toLocaleString()})</span>
+      </div>
+      <div class="product-card__price">
+        <span class="price-now">${fmt.price(p.price)}</span>
+        ${p.original_price?`<span class="price-old">${fmt.price(p.original_price)}</span>`:''}
+        ${disc>0?`<span class="price-save">-${disc}%</span>`:''}
+      </div>
+    </div>
+    <div class="product-card__footer">
+      ${isOwner ? 
+        `<div style="font-size:.75rem;color:var(--text3);text-align:center;width:100%;padding:10px 0;font-weight:600">
+          <i class="fa-solid fa-user-tag"></i> My Product
+        </div>` : 
+        `<button class="add-to-cart-btn" data-id="${p.id}" data-name="${p.name}"><i class="fa-solid fa-cart-plus"></i> Add to Cart</button>`
+      }
+    </div>
+  </div>`;
+}
+
+async function addToCart(id, name) {
+  if (!Auth.isLoggedIn()) { showToast('Please login first', 'info'); setTimeout(() => window.location.href='login.html', 1000); return; }
+  try {
+    await apiFetch('/cart/add', { method:'POST', body: JSON.stringify({ product_id: parseInt(id), quantity: 1 }) });
+    showToast(`${name} added to cart! 🛒`);
+    refreshCartBadge();
+  } catch(e) { showToast(e.message, 'error'); }
+}
+
+document.getElementById('search-input').addEventListener('input', () => { clearTimeout(searchTimer); searchTimer = setTimeout(loadProducts, 400); });
+document.getElementById('sort-select').addEventListener('change', loadProducts);
+document.getElementById('price-select').addEventListener('change', loadProducts);
+
+loadCats();
+</script>
+</body>
+</html>

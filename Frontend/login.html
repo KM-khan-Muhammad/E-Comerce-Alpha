@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Login – ShopNova</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-left" style="display:flex;align-items:center;gap:12px">
+    <button class="nav-toggle" id="sidebar-open"><i class="fa-solid fa-bars"></i></button>
+    <a href="index.html" class="nav-brand"><i class="fa-solid fa-bag-shopping"></i> <span>ShopNova</span></a>
+  </div>
+  <div class="nav-center">
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="products.html">Products</a>
+    </div>
+  </div>
+  <div class="nav-right">
+    <a href="cart.html" class="nav-btn cart-wrap" id="cart-link">
+      <i class="fa-solid fa-cart-shopping"></i> <span>Cart</span> <span class="cart-badge" id="cart-badge">0</span>
+    </a>
+    <div class="nav-guest" style="display:flex;gap:8px">
+      <a href="login.html" class="nav-btn btn-outline" style="border-color:var(--accent);color:var(--accent)">Login</a>
+      <a href="register.html" class="nav-btn btn-primary">Sign Up</a>
+    </div>
+  </div>
+</nav>
+
+<!-- SIDEBAR -->
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <a href="index.html" class="nav-brand"><i class="fa-solid fa-bag-shopping"></i> <span>ShopNova</span></a>
+    <button class="nav-toggle" id="sidebar-close" style="color:var(--text3)"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <div class="sidebar-links">
+    <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+    <a href="products.html"><i class="fa-solid fa-bag-shopping"></i> Products</a>
+    <a href="cart.html"><i class="fa-solid fa-cart-shopping"></i> My Cart</a>
+    <div class="nav-guest" style="display:flex;flex-direction:column;gap:10px">
+      <a href="login.html" class="active"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
+      <a href="register.html"><i class="fa-solid fa-user-plus"></i> Sign Up</a>
+    </div>
+    <a href="contact.html"><i class="fa-solid fa-headset"></i> Contact Support</a>
+  </div>
+</aside>
+
+<script>
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('sidebar-overlay');
+const openBtn = document.getElementById('sidebar-open');
+const closeBtn = document.getElementById('sidebar-close');
+const toggleSidebar = (state) => {
+  sidebar.classList.toggle('active', state);
+  overlay.classList.toggle('active', state);
+  document.body.style.overflow = state ? 'hidden' : '';
+};
+if(openBtn) openBtn.onclick = () => toggleSidebar(true);
+if(closeBtn) closeBtn.onclick = () => toggleSidebar(false);
+if(overlay) overlay.onclick = () => toggleSidebar(false);
+</script>
+
+<div class="auth-page section">
+  <div class="auth-card fade-in">
+    <div class="auth-logo">
+      <h1><i class="fa-solid fa-bag-shopping" style="color:var(--accent)"></i> ShopNova</h1>
+      <p>Welcome back! Sign in to your account</p>
+    </div>
+
+    <form id="login-form">
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" id="email" placeholder="you@example.com" required autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <div style="position:relative">
+          <input type="password" id="password" placeholder="Your password" required autocomplete="current-password" style="padding-right:44px">
+          <button type="button" onclick="togglePwd()" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text3);cursor:pointer;font-size:.9rem" id="pwd-toggle"><i class="fa-solid fa-eye"></i></button>
+        </div>
+      </div>
+
+      <div id="login-error" style="color:var(--red);font-size:.85rem;margin-bottom:12px;display:none;background:rgba(239,68,68,.1);padding:10px 14px;border-radius:8px"></div>
+
+      <button type="submit" class="btn btn-accent" style="width:100%;justify-content:center" id="login-btn">
+        Sign In <i class="fa-solid fa-arrow-right" style="margin-left:8px"></i>
+      </button>
+    </form>
+
+    <div class="auth-divider" style="margin:24px 0;color:var(--text3);font-size:.8rem;text-transform:uppercase;letter-spacing:1px">or</div>
+
+    <div class="auth-switch">
+      Don't have an account? <a href="register.html">Create one <i class="fa-solid fa-arrow-right" style="font-size:.8rem"></i></a>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-grid container">
+    <div class="footer-about">
+      <a href="index.html" class="nav-brand"><i class="fa-solid fa-bag-shopping"></i> ShopNova</a>
+      <p style="margin-top:16px;color:var(--text2);font-size:.9rem;line-height:1.6">Elevate your lifestyle with our curated collection of premium products.</p>
+      <div style="display:flex;gap:15px;margin-top:20px">
+        <a href="#" class="social-link"><i class="fa-brands fa-facebook"></i></a>
+        <a href="#" class="social-link"><i class="fa-brands fa-instagram"></i></a>
+        <a href="#" class="social-link"><i class="fa-brands fa-twitter"></i></a>
+      </div>
+    </div>
+    
+    <div class="footer-links">
+      <h4><i class="fa-solid fa-store" style="color:var(--accent);margin-right:8px"></i> Shop</h4>
+      <a href="products.html"><i class="fa-solid fa-chevron-right" style="font-size:.7rem;margin-right:8px"></i> All Products</a>
+      <a href="products.html?cat=Electronics"><i class="fa-solid fa-chevron-right" style="font-size:.7rem;margin-right:8px"></i> Electronics</a>
+      <a href="products.html?cat=Fashion"><i class="fa-solid fa-chevron-right" style="font-size:.7rem;margin-right:8px"></i> Fashion</a>
+    </div>
+
+    <div class="footer-links">
+      <h4><i class="fa-solid fa-user-circle" style="color:var(--accent);margin-right:8px"></i> Account</h4>
+      <a href="login.html"><i class="fa-solid fa-key" style="font-size:.7rem;margin-right:8px"></i> Login</a>
+      <a href="register.html"><i class="fa-solid fa-user-plus" style="font-size:.7rem;margin-right:8px"></i> Sign Up</a>
+      <a href="orders.html"><i class="fa-solid fa-box" style="font-size:.7rem;margin-right:8px"></i> My Orders</a>
+    </div>
+
+    <div class="footer-links">
+      <h4><i class="fa-solid fa-headset" style="color:var(--accent);margin-right:8px"></i> Quick Support</h4>
+      <a href="contact.html" class="btn btn-accent" style="display:inline-flex;width:auto;padding:12px 24px;gap:10px;margin-bottom:15px;border-radius:12px">
+        <i class="fa-solid fa-paper-plane"></i> Contact Us
+      </a>
+      <div style="display:flex;flex-direction:column;gap:12px;margin-top:10px">
+        <p style="font-size:.85rem;color:var(--text3);display:flex;align-items:center;gap:10px"><i class="fa-solid fa-phone" style="color:var(--accent)"></i> 03709684425</p>
+        <p style="font-size:.85rem;color:var(--text3);display:flex;align-items:center;gap:10px"><i class="fa-solid fa-envelope" style="color:var(--accent)"></i> help@shopnova.com</p>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom container">
+    <p>&copy; 2024 ShopNova. All rights reserved.</p>
+    <p style="display:flex;align-items:center;gap:5px">Handcrafted with <i class="fa-solid fa-heart" style="color:var(--red)"></i> for the world</p>
+  </div>
+</footer>
+
+<script src="js/api.js"></script>
+<script>
+if (Auth.isLoggedIn()) location.href = 'index.html';
+
+let showPwd = false;
+function togglePwd() {
+  showPwd = !showPwd;
+  const pwd = document.getElementById('password');
+  const btn = document.getElementById('pwd-toggle');
+  pwd.type = showPwd ? 'text' : 'password';
+  btn.innerHTML = showPwd ? '<i class="fa-solid fa-eye-slash"></i>' : '<i class="fa-solid fa-eye"></i>';
+}
+
+document.getElementById('login-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const err = document.getElementById('login-error');
+  const btn = document.getElementById('login-btn');
+  err.style.display = 'none';
+  btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Signing in...';
+
+  try {
+    const { user, token, message } = await apiFetch('/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ email: document.getElementById('email').value, password: document.getElementById('password').value })
+    });
+    Auth.setSession(user, token);
+    showToast(message || 'Login successful! 👋');
+    setTimeout(() => location.href = 'index.html', 800);
+  } catch(e) {
+    err.textContent = e.message;
+    err.style.display = 'block';
+    btn.disabled = false; btn.innerHTML = 'Sign In <i class="fa-solid fa-arrow-right" style="margin-left:8px"></i>';
+  }
+});
+</script>
+</body>
+</html>

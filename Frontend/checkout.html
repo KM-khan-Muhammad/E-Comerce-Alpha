@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Checkout – ShopNova</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+.checkout-layout{display:grid;grid-template-columns:1fr 360px;gap:24px;align-items:start}
+.step-indicator{display:flex;align-items:center;gap:0;margin-bottom:32px}
+.step{display:flex;align-items:center;gap:8px;font-size:.85rem;font-weight:600;color:var(--text3)}
+.step.active{color:var(--accent2)}
+.step.done{color:var(--green)}
+.step-num{width:28px;height:28px;border-radius:50%;border:2px solid currentColor;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700}
+.step-line{flex:1;height:2px;background:var(--border);margin:0 8px}
+.order-item-row{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--border)}
+.order-item-row img{width:56px;height:56px;object-fit:cover;border-radius:8px}
+.pay-methods{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:20px}
+.pay-method{padding:12px;border:2px solid var(--border);border-radius:8px;text-align:center;cursor:pointer;font-size:.8rem;font-weight:600;color:var(--text2);transition:all .2s}
+.pay-method.selected,.pay-method:hover{border-color:var(--accent);color:var(--accent);background:rgba(108,99,255,.08)}
+@media(max-width:768px){.checkout-layout{grid-template-columns:1fr}.pay-methods{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-left" style="display:flex;align-items:center;gap:12px">
+    <button class="nav-toggle" id="sidebar-open"><i class="fa-solid fa-bars"></i></button>
+    <a href="index.html" class="nav-brand"><i class="fa-solid fa-bag-shopping"></i> <span>ShopNova</span></a>
+  </div>
+  <div class="nav-center">
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="products.html">Products</a>
+    </div>
+  </div>
+  <div class="nav-right">
+    <a href="cart.html" class="nav-btn cart-wrap" id="cart-link">
+      <i class="fa-solid fa-cart-shopping"></i> <span>Cart</span> <span class="cart-badge" id="cart-badge">0</span>
+    </a>
+    <div class="nav-member" style="display:none;align-items:center;gap:10px">
+      <a href="orders.html" class="nav-btn btn-outline"><i class="fa-solid fa-box"></i> <span>Orders</span></a>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;line-height:1">
+        <span style="color:var(--text3);font-size:.7rem;text-transform:uppercase;letter-spacing:.5px">Account</span>
+        <strong id="nav-username" style="color:var(--text);font-size:.85rem"></strong>
+      </div>
+      <button class="nav-btn btn-ghost" onclick="logout()" style="padding:8px"><i class="fa-solid fa-right-from-bracket"></i></button>
+    </div>
+    <div class="nav-guest" style="display:flex;gap:8px">
+      <a href="login.html" class="nav-btn btn-outline">Login</a>
+      <a href="register.html" class="nav-btn btn-primary">Sign Up</a>
+    </div>
+  </div>
+</nav>
+
+<!-- SIDEBAR -->
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <a href="index.html" class="nav-brand"><i class="fa-solid fa-bag-shopping"></i> <span>ShopNova</span></a>
+    <button class="nav-toggle" id="sidebar-close" style="color:var(--text3)"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <div class="sidebar-links">
+    <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+    <a href="products.html"><i class="fa-solid fa-bag-shopping"></i> Products</a>
+    <a href="cart.html"><i class="fa-solid fa-cart-shopping"></i> My Cart</a>
+    <div class="nav-member" style="display:none;flex-direction:column;gap:10px">
+      <a href="orders.html"><i class="fa-solid fa-box"></i> My Orders</a>
+      <a href="my-products.html"><i class="fa-solid fa-store"></i> My Products</a>
+      <a href="add-product.html"><i class="fa-solid fa-plus"></i> Add Product</a>
+    </div>
+    <div class="nav-guest" style="display:flex;flex-direction:column;gap:10px">
+      <a href="login.html"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
+      <a href="register.html"><i class="fa-solid fa-user-plus"></i> Sign Up</a>
+    </div>
+    <a href="contact.html"><i class="fa-solid fa-headset"></i> Contact Support</a>
+    <button class="nav-member btn btn-ghost" onclick="logout()" style="display:none;justify-content:flex-start;padding:14px 16px;width:100%;gap:12px">
+      <i class="fa-solid fa-right-from-bracket" style="color:var(--error)"></i> Logout
+    </button>
+  </div>
+</aside>
+
+<script>
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('sidebar-overlay');
+const openBtn = document.getElementById('sidebar-open');
+const closeBtn = document.getElementById('sidebar-close');
+const toggleSidebar = (state) => {
+  sidebar.classList.toggle('active', state);
+  overlay.classList.toggle('active', state);
+  document.body.style.overflow = state ? 'hidden' : '';
+};
+if(openBtn) openBtn.onclick = () => toggleSidebar(true);
+if(closeBtn) closeBtn.onclick = () => toggleSidebar(false);
+if(overlay) overlay.onclick = () => toggleSidebar(false);
+</script>
+
+<div class="page section">
+  <div class="step-indicator">
+    <div class="step done"><span class="step-num">✓</span> Cart</div>
+    <div class="step-line"></div>
+    <div class="step active"><span class="step-num">2</span> Checkout</div>
+    <div class="step-line"></div>
+    <div class="step"><span class="step-num">3</span> Confirmation</div>
+  </div>
+
+  <div id="checkout-wrap"><div class="spinner"></div></div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-grid container">
+    <div class="footer-about">
+      <a href="index.html" class="nav-brand"><i class="fa-solid fa-bag-shopping"></i> ShopNova</a>
+      <p style="margin-top:16px;color:var(--text2);font-size:.9rem;line-height:1.6">Elevate your lifestyle with our curated collection of premium products.</p>
+      <div style="display:flex;gap:15px;margin-top:20px">
+        <a href="#" class="social-link"><i class="fa-brands fa-facebook"></i></a>
+        <a href="#" class="social-link"><i class="fa-brands fa-instagram"></i></a>
+        <a href="#" class="social-link"><i class="fa-brands fa-twitter"></i></a>
+      </div>
+    </div>
+    
+    <div class="footer-links">
+      <h4><i class="fa-solid fa-store" style="color:var(--accent);margin-right:8px"></i> Shop</h4>
+      <a href="products.html"><i class="fa-solid fa-chevron-right" style="font-size:.7rem;margin-right:8px"></i> All Products</a>
+      <a href="products.html?cat=Electronics"><i class="fa-solid fa-chevron-right" style="font-size:.7rem;margin-right:8px"></i> Electronics</a>
+      <a href="products.html?cat=Fashion"><i class="fa-solid fa-chevron-right" style="font-size:.7rem;margin-right:8px"></i> Fashion</a>
+    </div>
+
+    <div class="footer-links">
+      <h4><i class="fa-solid fa-user-circle" style="color:var(--accent);margin-right:8px"></i> Account</h4>
+      <a href="login.html"><i class="fa-solid fa-key" style="font-size:.7rem;margin-right:8px"></i> Login</a>
+      <a href="register.html"><i class="fa-solid fa-user-plus" style="font-size:.7rem;margin-right:8px"></i> Sign Up</a>
+      <a href="orders.html"><i class="fa-solid fa-box" style="font-size:.7rem;margin-right:8px"></i> My Orders</a>
+    </div>
+
+    <div class="footer-links">
+      <h4><i class="fa-solid fa-headset" style="color:var(--accent);margin-right:8px"></i> Quick Support</h4>
+      <a href="contact.html" class="btn btn-accent" style="display:inline-flex;width:auto;padding:12px 24px;gap:10px;margin-bottom:15px;border-radius:12px">
+        <i class="fa-solid fa-paper-plane"></i> Contact Us
+      </a>
+      <div style="display:flex;flex-direction:column;gap:12px;margin-top:10px">
+        <p style="font-size:.85rem;color:var(--text3);display:flex;align-items:center;gap:10px"><i class="fa-solid fa-phone" style="color:var(--accent)"></i> 03709684425</p>
+        <p style="font-size:.85rem;color:var(--text3);display:flex;align-items:center;gap:10px"><i class="fa-solid fa-envelope" style="color:var(--accent)"></i> help@shopnova.com</p>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom container">
+    <p>&copy; 2024 ShopNova. All rights reserved.</p>
+    <p style="display:flex;align-items:center;gap:5px">Handcrafted with <i class="fa-solid fa-heart" style="color:var(--red)"></i> for the world</p>
+  </div>
+</footer>
+
+<script src="js/api.js"></script>
+<script>
+let cartData = null;
+let payMethod = 'card';
+
+async function loadCheckout() {
+  if (!Auth.isLoggedIn()) { location.href = 'login.html'; return; }
+  try {
+    cartData = await apiFetch('/cart');
+    if (!cartData.items.length) { location.href = 'cart.html'; return; }
+    const { items, total } = cartData;
+    const shipping = total > 100 ? 0 : 9.99;
+    const tax = total * 0.08;
+    const grand = total + shipping + tax;
+    const user = Auth.getUser();
+
+    document.getElementById('checkout-wrap').innerHTML = `
+      <div class="checkout-layout">
+        <div>
+          <div class="card" style="margin-bottom:20px">
+            <div class="card-header"><span style="font-size:1.2rem">📦</span><h2 class="card-title">Shipping Information</h2></div>
+            <div class="form-row">
+              <div class="form-group"><label>Full Name</label><input type="text" id="ship-name" value="${user?.name||''}" placeholder="John Doe"></div>
+              <div class="form-group"><label>City</label><input type="text" id="ship-city" placeholder="New York"></div>
+            </div>
+            <div class="form-group"><label>Street Address</label><input type="text" id="ship-addr" placeholder="123 Main St, Apt 4B"></div>
+            <div class="form-row">
+              <div class="form-group"><label>ZIP Code</label><input type="text" id="ship-zip" placeholder="10001"></div>
+              <div class="form-group"><label>Country</label><select id="ship-country"><option>United States</option><option>Canada</option><option>United Kingdom</option><option>Pakistan</option><option>Other</option></select></div>
+            </div>
+          </div>
+          <div class="card fade-in">
+            <div class="card-header"><span style="font-size:1.2rem">💳</span><h2 class="card-title">Payment Method</h2></div>
+            <div class="pay-methods">
+              <div class="pay-method selected" data-pay="card" onclick="selectPay('card',this)">💳 Credit Card</div>
+              <div class="pay-method" data-pay="paypal" onclick="selectPay('paypal',this)">🅿️ PayPal</div>
+              <div class="pay-method" data-pay="cod" onclick="selectPay('cod',this)">💵 Cash on Delivery</div>
+            </div>
+            <div id="card-fields">
+              <div class="form-group"><label>Card Number</label><input type="text" placeholder="**** **** **** ****" maxlength="19" oninput="formatCard(this)"></div>
+              <div class="form-row">
+                <div class="form-group"><label>Expiry</label><input type="text" placeholder="MM/YY" maxlength="5"></div>
+                <div class="form-group"><label>CVV</label><input type="text" placeholder="***" maxlength="3"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="summary-card">
+          <h3 style="font-weight:700;margin-bottom:16px">Order Summary</h3>
+          ${items.map(i=>`<div class="order-item-row">
+            <img src="${i.image_url}" onerror="this.src='https://via.placeholder.com/56/141c2e/6c63ff?text=P'">
+            <div style="flex:1"><div style="font-size:.85rem;font-weight:600">${i.name}</div><div style="font-size:.78rem;color:var(--text3)">Qty: ${i.quantity}</div></div>
+            <div style="font-weight:600;font-size:.9rem">${fmt.price(i.price*i.quantity)}</div>
+          </div>`).join('')}
+          <div style="margin-top:16px">
+            <div style="display:flex;justify-content:space-between;padding:8px 0;font-size:.875rem;border-top:1px solid var(--border)"><span>Subtotal</span><span>${fmt.price(total)}</span></div>
+            <div style="display:flex;justify-content:space-between;padding:8px 0;font-size:.875rem"><span>Shipping</span><span>${shipping===0?'<span style="color:var(--green)">FREE</span>':fmt.price(shipping)}</span></div>
+            <div style="display:flex;justify-content:space-between;padding:8px 0;font-size:.875rem"><span>Tax (8%)</span><span>${fmt.price(tax)}</span></div>
+            <div style="display:flex;justify-content:space-between;padding:12px 0;font-size:1.1rem;font-weight:800;border-top:1px solid var(--border);color:var(--accent2)"><span>Total</span><span>${fmt.price(grand)}</span></div>
+          </div>
+          <button type="submit" class="btn btn-accent btn-lg" style="width:100%;justify-content:center;margin-top:12px" id="pay-btn" onclick="placeOrder()">
+      <i class="fa-solid fa-lock"></i> Pay & Complete Order
+    </button>
+          <a href="cart.html" class="btn btn-ghost" style="width:100%;justify-content:center;margin-top:8px">← Back to Cart</a>
+        </div>
+      </div>`;
+  } catch(e) { document.getElementById('checkout-wrap').innerHTML = '<p style="color:var(--red)">Failed to load checkout.</p>'; }
+}
+
+function selectPay(method, el) {
+  payMethod = method;
+  document.querySelectorAll('.pay-method').forEach(m => m.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('card-fields').style.display = method === 'card' ? 'block' : 'none';
+}
+
+function formatCard(el) {
+  el.value = el.value.replace(/\D/g,'').replace(/(.{4})/g,'$1 ').trim().substring(0,19);
+}
+
+async function placeOrder() {
+  const name = document.getElementById('ship-name')?.value?.trim();
+  const addr = document.getElementById('ship-addr')?.value?.trim();
+  const city = document.getElementById('ship-city')?.value?.trim();
+  const zip  = document.getElementById('ship-zip')?.value?.trim();
+  if (!name || !addr || !city || !zip) { showToast('Please fill in all shipping fields', 'error'); return; }
+
+  const btn = document.getElementById('pay-btn');
+  btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
+  try {
+    const res = await apiFetch('/orders', { method:'POST', body: JSON.stringify({ shipping_name:name, shipping_address:addr, shipping_city:city, shipping_zip:zip, payment_method:payMethod }) });
+    showToast('Order placed successfully! 🎉');
+    setTimeout(() => location.href = `orders.html?new=${res.orderId}`, 1200);
+  } catch(e) { showToast(e.message, 'error'); btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-lock"></i> Pay & Complete Order'; }
+}
+
+loadCheckout();
+</script>
+</body>
+</html>

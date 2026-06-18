@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Add Product – ShopNova</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-left" style="display:flex;align-items:center;gap:12px">
+    <button class="nav-toggle" id="sidebar-open"><i class="fa-solid fa-bars"></i></button>
+    <a href="index.html" class="nav-brand"><i class="fa-solid fa-bag-shopping"></i> <span>ShopNova</span></a>
+  </div>
+  <div class="nav-center">
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="products.html">Products</a>
+    </div>
+  </div>
+  <div class="nav-right">
+    <a href="cart.html" class="nav-btn cart-wrap" id="cart-link">
+      <i class="fa-solid fa-cart-shopping"></i> <span>Cart</span> <span class="cart-badge" id="cart-badge">0</span>
+    </a>
+    <div class="nav-member" style="display:none;align-items:center;gap:10px">
+      <a href="orders.html" class="nav-btn btn-outline"><i class="fa-solid fa-box"></i> <span>Orders</span></a>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;line-height:1">
+        <span style="color:var(--text3);font-size:.7rem;text-transform:uppercase;letter-spacing:.5px">Account</span>
+        <strong id="nav-username" style="color:var(--text);font-size:.85rem"></strong>
+      </div>
+      <button class="nav-btn btn-ghost" onclick="logout()" style="padding:8px"><i class="fa-solid fa-right-from-bracket"></i></button>
+    </div>
+    <div class="nav-guest" style="display:flex;gap:8px">
+      <a href="login.html" class="nav-btn btn-outline">Login</a>
+      <a href="register.html" class="nav-btn btn-primary">Sign Up</a>
+    </div>
+  </div>
+</nav>
+
+<!-- SIDEBAR -->
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <a href="index.html" class="nav-brand"><i class="fa-solid fa-bag-shopping"></i> <span>ShopNova</span></a>
+    <button class="nav-toggle" id="sidebar-close" style="color:var(--text3)"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <div class="sidebar-links">
+    <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+    <a href="products.html"><i class="fa-solid fa-bag-shopping"></i> Products</a>
+    <a href="cart.html"><i class="fa-solid fa-cart-shopping"></i> My Cart</a>
+    <div class="nav-member" style="display:none;flex-direction:column;gap:10px">
+      <a href="orders.html"><i class="fa-solid fa-box"></i> My Orders</a>
+      <a href="my-products.html"><i class="fa-solid fa-store"></i> My Products</a>
+      <a href="add-product.html" class="active"><i class="fa-solid fa-plus"></i> Add Product</a>
+    </div>
+    <div class="nav-guest" style="display:flex;flex-direction:column;gap:10px">
+      <a href="login.html"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
+      <a href="register.html"><i class="fa-solid fa-user-plus"></i> Sign Up</a>
+    </div>
+    <a href="contact.html"><i class="fa-solid fa-headset"></i> Contact Support</a>
+    <button class="nav-member btn btn-ghost" onclick="logout()" style="display:none;justify-content:flex-start;padding:14px 16px;width:100%;gap:12px">
+      <i class="fa-solid fa-right-from-bracket" style="color:var(--error)"></i> Logout
+    </button>
+  </div>
+</aside>
+
+<script>
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('sidebar-overlay');
+const openBtn = document.getElementById('sidebar-open');
+const closeBtn = document.getElementById('sidebar-close');
+const toggleSidebar = (state) => {
+  sidebar.classList.toggle('active', state);
+  overlay.classList.toggle('active', state);
+  document.body.style.overflow = state ? 'hidden' : '';
+};
+if(openBtn) openBtn.onclick = () => toggleSidebar(true);
+if(closeBtn) closeBtn.onclick = () => toggleSidebar(false);
+if(overlay) overlay.onclick = () => toggleSidebar(false);
+</script>
+
+<div class="page section">
+  <div style="max-width: 800px; margin: 0 auto;">
+    <h1 style="font-size:1.8rem;font-weight:800;margin-bottom:8px">➕ Add New Product</h1>
+    <p style="color:var(--text3);margin-bottom:28px">Create a new product listing for the store.</p>
+    
+    <div class="card fade-in">
+      <form id="add-product-form">
+        <div class="form-group">
+          <label>Product Name</label>
+          <input type="text" id="name" placeholder="Enter product name" required>
+        </div>
+        
+        <div class="form-group">
+          <label>Description</label>
+          <textarea id="description" rows="4" placeholder="Describe the product..." required></textarea>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label>Price ($)</label>
+            <input type="number" id="price" step="0.01" placeholder="0.00" required>
+          </div>
+          <div class="form-group">
+            <label>Original Price ($) - Optional</label>
+            <input type="number" id="original_price" step="0.01" placeholder="0.00">
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label>Category</label>
+            <select id="category_id" required>
+              <option value="">Select Category</option>
+              <!-- Categories will be loaded here -->
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Stock Quantity</label>
+            <input type="number" id="stock" placeholder="0" required>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label>Image URL</label>
+          <input type="url" id="image_url" placeholder="https://example.com/image.jpg" required>
+          <p style="font-size: 0.75rem; color: var(--text3); margin-top: 4px;">Use high-quality images from Unsplash or other sources.</p>
+        </div>
+        
+        <div class="form-group" style="display: flex; align-items: center; gap: 10px; margin: 20px 0;">
+          <input type="checkbox" id="featured" style="width: auto; margin-top: 0;">
+          <label for="featured" style="margin-bottom: 0; cursor: pointer;">Mark as Featured Product</label>
+        </div>
+
+        <div id="add-error" style="color:var(--red);font-size:.85rem;margin-bottom:12px;display:none;background:rgba(239,68,68,.1);padding:10px 14px;border-radius:8px"></div>
+
+        <button type="submit" class="btn btn-accent btn-lg" style="width:100%;justify-content:center" id="submit-btn">
+          🚀 Create Product Listing
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-grid container">
+    <div class="footer-about">
+      <a href="index.html" class="nav-brand"><i class="fa-solid fa-bag-shopping"></i> ShopNova</a>
+      <p style="margin-top:16px;color:var(--text2);font-size:.9rem;line-height:1.6">Elevate your lifestyle with our curated collection of premium products.</p>
+      <div style="display:flex;gap:15px;margin-top:20px">
+        <a href="#" class="social-link"><i class="fa-brands fa-facebook"></i></a>
+        <a href="#" class="social-link"><i class="fa-brands fa-instagram"></i></a>
+        <a href="#" class="social-link"><i class="fa-brands fa-twitter"></i></a>
+      </div>
+    </div>
+    
+    <div class="footer-links">
+      <h4><i class="fa-solid fa-store" style="color:var(--accent);margin-right:8px"></i> Shop</h4>
+      <a href="products.html"><i class="fa-solid fa-chevron-right" style="font-size:.7rem;margin-right:8px"></i> All Products</a>
+      <a href="products.html?cat=Electronics"><i class="fa-solid fa-chevron-right" style="font-size:.7rem;margin-right:8px"></i> Electronics</a>
+      <a href="products.html?cat=Fashion"><i class="fa-solid fa-chevron-right" style="font-size:.7rem;margin-right:8px"></i> Fashion</a>
+    </div>
+
+    <div class="footer-links">
+      <h4><i class="fa-solid fa-user-circle" style="color:var(--accent);margin-right:8px"></i> Account</h4>
+      <a href="login.html"><i class="fa-solid fa-key" style="font-size:.7rem;margin-right:8px"></i> Login</a>
+      <a href="register.html"><i class="fa-solid fa-user-plus" style="font-size:.7rem;margin-right:8px"></i> Sign Up</a>
+      <a href="orders.html"><i class="fa-solid fa-box" style="font-size:.7rem;margin-right:8px"></i> My Orders</a>
+    </div>
+
+    <div class="footer-links">
+      <h4><i class="fa-solid fa-headset" style="color:var(--accent);margin-right:8px"></i> Quick Support</h4>
+      <a href="contact.html" class="btn btn-accent" style="display:inline-flex;width:auto;padding:12px 24px;gap:10px;margin-bottom:15px;border-radius:12px">
+        <i class="fa-solid fa-paper-plane"></i> Contact Us
+      </a>
+      <div style="display:flex;flex-direction:column;gap:12px;margin-top:10px">
+        <p style="font-size:.85rem;color:var(--text3);display:flex;align-items:center;gap:10px"><i class="fa-solid fa-phone" style="color:var(--accent)"></i> 03709684425</p>
+        <p style="font-size:.85rem;color:var(--text3);display:flex;align-items:center;gap:10px"><i class="fa-solid fa-envelope" style="color:var(--accent)"></i> help@shopnova.com</p>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom container">
+    <p>&copy; 2024 ShopNova. All rights reserved.</p>
+    <p style="display:flex;align-items:center;gap:5px">Handcrafted with <i class="fa-solid fa-heart" style="color:var(--red)"></i> for the world</p>
+  </div>
+</footer>
+
+<script src="js/api.js"></script>
+<script>
+// Check if user is logged in
+const user = Auth.getUser();
+if (!user) {
+  showToast('Please login first!', 'error');
+  setTimeout(() => location.href = 'login.html', 1000);
+}
+
+const urlParams = new URLSearchParams(window.location.search);
+const editId = urlParams.get('edit');
+
+// Load Categories
+async function loadCategories() {
+  try {
+    const { categories } = await apiFetch('/products/categories');
+    const select = document.getElementById('category_id');
+    categories.forEach(c => {
+      const opt = document.createElement('option');
+      opt.value = c.id;
+      opt.textContent = `${c.icon} ${c.name}`;
+      select.appendChild(opt);
+    });
+  } catch(e) {
+    showToast('Failed to load categories', 'error');
+  }
+}
+
+// Load Product Data if in Edit Mode
+async function loadProductData(id) {
+  try {
+    const { product } = await apiFetch(`/products/${id}`);
+    document.getElementById('name').value = product.name;
+    document.getElementById('description').value = product.description;
+    document.getElementById('price').value = product.price;
+    document.getElementById('original_price').value = product.original_price || '';
+    document.getElementById('category_id').value = product.category_id;
+    document.getElementById('stock').value = product.stock;
+    document.getElementById('image_url').value = product.image_url;
+    document.getElementById('featured').checked = product.featured === 1;
+
+    // Update UI for Edit Mode
+    document.querySelector('h1').innerHTML = '✏️ Edit Product';
+    document.querySelector('title').textContent = 'Edit Product – ShopNova';
+    document.querySelector('p[style*="color:var(--text3);margin-bottom:28px"]').textContent = 'Update your product details.';
+    document.getElementById('submit-btn').innerHTML = '💾 Update Product Listing';
+  } catch(e) {
+    showToast('Failed to load product data.', 'error');
+  }
+}
+
+// Handle Form Submission
+document.getElementById('add-product-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const err = document.getElementById('add-error');
+  const btn = document.getElementById('submit-btn');
+  err.style.display = 'none';
+  
+  const productData = {
+    name: document.getElementById('name').value,
+    description: document.getElementById('description').value,
+    price: parseFloat(document.getElementById('price').value),
+    original_price: document.getElementById('original_price').value ? parseFloat(document.getElementById('original_price').value) : null,
+    category_id: parseInt(document.getElementById('category_id').value),
+    stock: parseInt(document.getElementById('stock').value),
+    image_url: document.getElementById('image_url').value,
+    featured: document.getElementById('featured').checked ? 1 : 0
+  };
+
+  btn.disabled = true; 
+  btn.innerHTML = editId ? '<i class="fa-solid fa-spinner fa-spin"></i> Updating...' : '<i class="fa-solid fa-spinner fa-spin"></i> Creating...';
+  try {
+    if (editId) {
+      await apiFetch(`/products/${editId}`, {
+        method: 'PUT',
+        body: JSON.stringify(productData)
+      });
+      showToast('Product updated successfully! ✅');
+    } else {
+      await apiFetch('/products', {
+        method: 'POST',
+        body: JSON.stringify(productData)
+      });
+      showToast('Product created successfully! 📦');
+    }
+    setTimeout(() => location.href = 'my-products.html', 1500);
+  } catch(e) {
+    err.textContent = e.message;
+    err.style.display = 'block';
+    btn.disabled = false; 
+    btn.innerHTML = editId ? '💾 Update Product Listing' : '🚀 Create Product Listing';
+  }
+});
+
+// Initialize
+async function init() {
+  await loadCategories();
+  if (editId) {
+    await loadProductData(editId);
+  }
+}
+init();
+</script>
+</body>
+</html>

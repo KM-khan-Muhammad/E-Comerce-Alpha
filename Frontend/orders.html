@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>My Orders – ShopNova</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+.order-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:16px;overflow:hidden;transition:border-color .2s}
+.order-card:hover{border-color:var(--border2)}
+.order-header{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:12px;cursor:pointer}
+.order-meta{display:flex;gap:24px;flex-wrap:wrap}
+.order-meta-item label{display:block;font-size:.72rem;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
+.order-meta-item span{font-weight:600;font-size:.9rem}
+.order-body{padding:20px;display:none}
+.order-body.open{display:block}
+.order-item-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
+.order-item-row:last-child{border:none}
+.order-item-row img{width:52px;height:52px;object-fit:cover;border-radius:6px}
+.order-totals{background:var(--bg3);border-radius:8px;padding:14px 16px;margin-top:16px}
+.order-total-row{display:flex;justify-content:space-between;font-size:.875rem;padding:4px 0}
+.order-total-row.grand{font-weight:800;font-size:1rem;color:var(--accent2);margin-top:6px;padding-top:10px;border-top:1px solid var(--border)}
+.success-banner{background:linear-gradient(135deg,rgba(16,185,129,.15),rgba(108,99,255,.1));border:1px solid rgba(16,185,129,.3);border-radius:var(--radius);padding:28px;text-align:center;margin-bottom:28px}
+</style>
+</head>
+<body>
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-left" style="display:flex;align-items:center;gap:12px">
+    <button class="nav-toggle" id="sidebar-open"><i class="fa-solid fa-bars"></i></button>
+    <a href="index.html" class="nav-brand"><i class="fa-solid fa-bag-shopping"></i> <span>ShopNova</span></a>
+  </div>
+  <div class="nav-center">
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="products.html">Products</a>
+    </div>
+  </div>
+  <div class="nav-right">
+    <a href="cart.html" class="nav-btn cart-wrap" id="cart-link">
+      <i class="fa-solid fa-cart-shopping"></i> <span>Cart</span> <span class="cart-badge" id="cart-badge">0</span>
+    </a>
+    <div class="nav-member" style="display:none;align-items:center;gap:10px">
+      <a href="orders.html" class="nav-btn btn-outline active"><i class="fa-solid fa-box"></i> <span>Orders</span></a>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;line-height:1">
+        <span style="color:var(--text3);font-size:.7rem;text-transform:uppercase;letter-spacing:.5px">Account</span>
+        <strong id="nav-username" style="color:var(--text);font-size:.85rem"></strong>
+      </div>
+      <button class="nav-btn btn-ghost" onclick="logout()" style="padding:8px"><i class="fa-solid fa-right-from-bracket"></i></button>
+    </div>
+    <div class="nav-guest" style="display:flex;gap:8px">
+      <a href="login.html" class="nav-btn btn-outline">Login</a>
+      <a href="register.html" class="nav-btn btn-primary">Sign Up</a>
+    </div>
+  </div>
+</nav>
+
+<!-- SIDEBAR -->
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <a href="index.html" class="nav-brand"><i class="fa-solid fa-bag-shopping"></i> <span>ShopNova</span></a>
+    <button class="nav-toggle" id="sidebar-close" style="color:var(--text3)"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <div class="sidebar-links">
+    <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+    <a href="products.html"><i class="fa-solid fa-bag-shopping"></i> Products</a>
+    <a href="cart.html"><i class="fa-solid fa-cart-shopping"></i> My Cart</a>
+    <div class="nav-member" style="display:none;flex-direction:column;gap:10px">
+      <a href="orders.html" class="active"><i class="fa-solid fa-box"></i> My Orders</a>
+      <a href="my-products.html"><i class="fa-solid fa-store"></i> My Products</a>
+      <a href="add-product.html"><i class="fa-solid fa-plus"></i> Add Product</a>
+    </div>
+    <div class="nav-guest" style="display:flex;flex-direction:column;gap:10px">
+      <a href="login.html"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
+      <a href="register.html"><i class="fa-solid fa-user-plus"></i> Sign Up</a>
+    </div>
+    <a href="contact.html"><i class="fa-solid fa-headset"></i> Contact Support</a>
+    <button class="nav-member btn btn-ghost" onclick="logout()" style="display:none;justify-content:flex-start;padding:14px 16px;width:100%;gap:12px">
+      <i class="fa-solid fa-right-from-bracket" style="color:var(--error)"></i> Logout
+    </button>
+  </div>
+</aside>
+
+<script>
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('sidebar-overlay');
+const openBtn = document.getElementById('sidebar-open');
+const closeBtn = document.getElementById('sidebar-close');
+const toggleSidebar = (state) => {
+  sidebar.classList.toggle('active', state);
+  overlay.classList.toggle('active', state);
+  document.body.style.overflow = state ? 'hidden' : '';
+};
+if(openBtn) openBtn.onclick = () => toggleSidebar(true);
+if(closeBtn) closeBtn.onclick = () => toggleSidebar(false);
+if(overlay) overlay.onclick = () => toggleSidebar(false);
+</script>
+
+<div class="page section">
+  <h1 style="font-size:1.8rem;font-weight:800;margin-bottom:8px"><i class="fa-solid fa-box-open"></i> My Orders</h1>
+  <p style="color:var(--text3);margin-bottom:28px">Track and manage all your orders</p>
+  <div id="orders-wrap"><div class="spinner"></div></div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-grid container">
+    <div class="footer-about">
+      <a href="index.html" class="nav-brand"><i class="fa-solid fa-bag-shopping"></i> ShopNova</a>
+      <p style="margin-top:16px;color:var(--text2);font-size:.9rem;line-height:1.6">Elevate your lifestyle with our curated collection of premium products.</p>
+      <div style="display:flex;gap:15px;margin-top:20px">
+        <a href="#" class="social-link"><i class="fa-brands fa-facebook"></i></a>
+        <a href="#" class="social-link"><i class="fa-brands fa-instagram"></i></a>
+        <a href="#" class="social-link"><i class="fa-brands fa-twitter"></i></a>
+      </div>
+    </div>
+    
+    <div class="footer-links">
+      <h4><i class="fa-solid fa-store" style="color:var(--accent);margin-right:8px"></i> Shop</h4>
+      <a href="products.html"><i class="fa-solid fa-chevron-right" style="font-size:.7rem;margin-right:8px"></i> All Products</a>
+      <a href="products.html?cat=Electronics"><i class="fa-solid fa-chevron-right" style="font-size:.7rem;margin-right:8px"></i> Electronics</a>
+      <a href="products.html?cat=Fashion"><i class="fa-solid fa-chevron-right" style="font-size:.7rem;margin-right:8px"></i> Fashion</a>
+    </div>
+
+    <div class="footer-links">
+      <h4><i class="fa-solid fa-user-circle" style="color:var(--accent);margin-right:8px"></i> Account</h4>
+      <a href="login.html"><i class="fa-solid fa-key" style="font-size:.7rem;margin-right:8px"></i> Login</a>
+      <a href="register.html"><i class="fa-solid fa-user-plus" style="font-size:.7rem;margin-right:8px"></i> Sign Up</a>
+      <a href="orders.html"><i class="fa-solid fa-box" style="font-size:.7rem;margin-right:8px"></i> My Orders</a>
+    </div>
+
+    <div class="footer-links">
+      <h4><i class="fa-solid fa-headset" style="color:var(--accent);margin-right:8px"></i> Quick Support</h4>
+      <a href="contact.html" class="btn btn-accent" style="display:inline-flex;width:auto;padding:12px 24px;gap:10px;margin-bottom:15px;border-radius:12px">
+        <i class="fa-solid fa-paper-plane"></i> Contact Us
+      </a>
+      <div style="display:flex;flex-direction:column;gap:12px;margin-top:10px">
+        <p style="font-size:.85rem;color:var(--text3);display:flex;align-items:center;gap:10px"><i class="fa-solid fa-phone" style="color:var(--accent)"></i> 03709684425</p>
+        <p style="font-size:.85rem;color:var(--text3);display:flex;align-items:center;gap:10px"><i class="fa-solid fa-envelope" style="color:var(--accent)"></i> help@shopnova.com</p>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom container">
+    <p>&copy; 2024 ShopNova. All rights reserved.</p>
+    <p style="display:flex;align-items:center;gap:5px">Handcrafted with <i class="fa-solid fa-heart" style="color:var(--red)"></i> for the world</p>
+  </div>
+</footer>
+
+<script src="js/api.js"></script>
+<script>
+async function loadOrders() {
+  const wrap = document.getElementById('orders-wrap');
+  if (!Auth.isLoggedIn()) {
+    wrap.innerHTML = `<div class="empty-state"><div class="icon"><i class="fa-solid fa-lock"></i></div><h3>Please log in</h3><p>Login to view your orders</p><a href="login.html" class="btn btn-accent">Login</a></div>`;
+    return;
+  }
+
+  // Show success banner if newly placed
+  const newOrderId = new URLSearchParams(location.search).get('new');
+
+  try {
+    const { orders } = await apiFetch('/orders');
+
+    let html = '';
+    if (newOrderId) {
+      html += `<div class="success-banner fade-in">
+        <div style="font-size:2.5rem;margin-bottom:10px;color:var(--green)"><i class="fa-solid fa-circle-check"></i></div>
+        <h2 style="font-size:1.3rem;font-weight:800;margin-bottom:6px">Order Placed Successfully!</h2>
+        <p style="color:var(--text2);margin-bottom:4px">Order #${newOrderId} is confirmed and being processed.</p>
+        <p style="color:var(--text3);font-size:.85rem">You'll receive updates as your order progresses.</p>
+      </div>`;
+    }
+
+    if (!orders.length) {
+      html += `<div class="empty-state"><div class="icon"><i class="fa-solid fa-box-open"></i></div><h3>No orders yet</h3><p>Start shopping to see your orders here</p><a href="products.html" class="btn btn-accent">Shop Now</a></div>`;
+      wrap.innerHTML = html;
+      return;
+    }
+
+    html += orders.map(o => `
+      <div class="order-card ${o.id == newOrderId ? 'fade-in' : ''}">
+        <div class="order-header" onclick="toggleOrder(${o.id})">
+          <div class="order-meta">
+            <div class="order-meta-item"><label>Order ID</label><span>#${o.id}</span></div>
+            <div class="order-meta-item"><label>Date</label><span>${fmt.date(o.created_at)}</span></div>
+            <div class="order-meta-item"><label>Items</label><span>${o.item_count} item${o.item_count!=1?'s':''}</span></div>
+            <div class="order-meta-item"><label>Total</label><span style="color:var(--accent2)">${fmt.price(o.total)}</span></div>
+            <div class="order-meta-item"><label>Payment</label><span style="text-transform:capitalize">${o.payment_method}</span></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px">
+            <span class="status-badge status-${o.status}"><i class="fa-solid ${o.status==='delivered'?'fa-circle-check':o.status==='shipped'?'fa-truck':o.status==='confirmed'?'fa-circle-check':'fa-clock'}"></i> ${o.status.toUpperCase()}</span>
+            <span style="color:var(--text3);font-size:.8rem" id="arrow-${o.id}">▼</span>
+          </div>
+        </div>
+        <div class="order-body" id="body-${o.id}">
+          <div id="items-${o.id}"><div class="spinner" style="margin:16px auto"></div></div>
+        </div>
+      </div>`).join('');
+
+    wrap.innerHTML = html;
+
+    // Auto-open new order
+    if (newOrderId) toggleOrder(parseInt(newOrderId));
+
+  } catch(e) { wrap.innerHTML = '<p style="color:var(--red)">Failed to load orders.</p>'; }
+}
+
+function statusIcon(s) {
+  const icons = { pending:'⏳', confirmed:'✅', shipped:'🚚', delivered:'📦', cancelled:'❌' };
+  return icons[s] || '📦';
+}
+
+async function toggleOrder(id) {
+  const body = document.getElementById(`body-${id}`);
+  const arrow = document.getElementById(`arrow-${id}`);
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open');
+  arrow.textContent = isOpen ? '▼' : '▲';
+
+  if (!isOpen && body.querySelector('.spinner')) {
+    try {
+      const { order, items } = await apiFetch(`/orders/${id}`);
+      body.querySelector(`#items-${id}`).innerHTML = `
+        <div style="margin-bottom:16px">
+          ${items.map(i => `<div class="order-item-row">
+            <img src="${i.image_url||''}" onerror="this.src='https://via.placeholder.com/52/141c2e/6c63ff?text=P'">
+            <div style="flex:1"><div style="font-weight:600;font-size:.9rem">${i.name}</div><div style="font-size:.78rem;color:var(--text3)">Qty: ${i.quantity} × ${fmt.price(i.price)}</div></div>
+            <div style="font-weight:700">${fmt.price(i.price*i.quantity)}</div>
+          </div>`).join('')}
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px">
+          <div style="background:var(--bg3);border-radius:8px;padding:14px 16px">
+            <div style="font-size:.75rem;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Shipping Address</div>
+            <div style="font-weight:600;font-size:.9rem">${order.shipping_name}</div>
+            <div style="font-size:.85rem;color:var(--text2)">${order.shipping_address}</div>
+            <div style="font-size:.85rem;color:var(--text2)">${order.shipping_city}, ${order.shipping_zip}</div>
+          </div>
+          <div class="order-totals">
+            <div class="order-total-row"><span>Subtotal</span><span>${fmt.price(order.subtotal)}</span></div>
+            <div class="order-total-row"><span>Shipping</span><span>${parseFloat(order.shipping)===0?'<span style="color:var(--green)">FREE</span>':fmt.price(order.shipping)}</span></div>
+            <div class="order-total-row"><span>Tax</span><span>${fmt.price(order.tax)}</span></div>
+            <div class="order-total-row grand"><span>Total</span><span>${fmt.price(order.total)}</span></div>
+          </div>
+        </div>
+        <a href="products.html" class="btn btn-accent btn-sm"><i class="fa-solid fa-cart-shopping"></i> Shop Again</a>`;
+    } catch(e) { body.querySelector(`#items-${id}`).innerHTML = '<p style="color:var(--red);padding:12px">Failed to load details.</p>'; }
+  }
+}
+
+loadOrders();
+</script>
+</body>
+</html>
